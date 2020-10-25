@@ -16,7 +16,13 @@
 //  }
 
 defined('ABSPATH') or die('Forbidden');
+if( file_exists( dirname(__FILE__) . '/vendor/autoload.php') ){
+    require_once dirname(__FILE__) . '/vendor/autoload.php';
+}
 
+use Inc\Activate;
+use Inc\Deactivate;
+use Template\Admin;
 if( !class_exists('hercivalPlugin')){
     class hercivalPlugin{
         public $hercivalPluginName;
@@ -41,7 +47,8 @@ if( !class_exists('hercivalPlugin')){
 
         }
         public function admin_index(){
-            require_once plugin_dir_path(__FILE__).'/template/admin.php';
+            $adminTemplate = new Admin;
+            $adminTemplate->loadTemplate();
         }
 
 
@@ -50,15 +57,10 @@ if( !class_exists('hercivalPlugin')){
         }
 
         function activation(){
-            require_once plugin_dir_path(__FILE__).'/inc/hercival-plugin-activation.php';
-            $hercivalActivation = new hercivalPluginActivation();
-            $hercivalActivation->activate();
+            $ActivateInstance = new Activate;
+            $ActivateInstance->activate();
         }
 
-        function deactivation(){
-            require_once plugin_dir_path(__FILE__).'/inc/hercival-plugin-deactivate.php';
-            hercivalPluginDeactivation::deactivate();
-        }
 
         function custom_post_type(){
             register_post_type( 'book', ['public' => true, 'label' => 'Books', 'menu_icon' => 'dashicons-book'] );
@@ -69,14 +71,12 @@ if( !class_exists('hercivalPlugin')){
         }
 
     }
-    if( class_exists('hercivalPlugin') ){
-        $hercivalPlugin = new hercivalPlugin('shit happens');
-        $hercivalPlugin->register();
-    }
+    $hercivalPlugin = new hercivalPlugin('shit happens');
+    $hercivalPlugin->register();
     //plugin activation
     register_activation_hook(__FILE__, array($hercivalPlugin, 'activation' ) );
 
     //plugin deactivation
-    register_deactivation_hook(__FILE__, array($hercivalPlugin, 'deactivation' ) );
+    register_deactivation_hook(__FILE__, array('Deactivate', 'deactivation' ) );
 }
 

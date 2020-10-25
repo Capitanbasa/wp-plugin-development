@@ -1,0 +1,20 @@
+{
+    "name": "hercival/hercival-plugin",
+    "description": "this is a Wordpress Lesson for Creating Plugins",
+    "type": "project",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Capitanbasa",
+            "email": "hercivalaragon@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4" :{
+            "Inc\\" : "./inc",
+            "Template\\" : "./template"
+        }
+    }
+}
